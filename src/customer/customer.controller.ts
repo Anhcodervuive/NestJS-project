@@ -17,37 +17,29 @@ export class CustomerController {
 
   @Post('api1')
   SolveAPI1(@Body() body) {
-    const numbers = body.numbers as Array<number>;
-    const countOccurrences = new Map<number, number>();
+    const numbers = body.numbers as number[];
 
-    let i = 0;
-    while (i < numbers.length) {
-      let value = numbers[i];
-      let nextValue = numbers[i + 1];
-      const occurrences = countOccurrences.get(value) ?? 1;
-      countOccurrences.set(value, occurrences);
+    let currentNumber = numbers[0];
+    let currentLength = 1;
 
-      while (value === nextValue) {
-        const occurrences = countOccurrences.get(value) ?? 1;
-        countOccurrences.set(value, occurrences + 1);
-        i++;
-        value = numbers[i];
-        nextValue = numbers[i + 1];
+    let maxNumber = numbers[0];
+    let maxLength = 1;
+
+    for (let i = 1; i < numbers.length; i++) {
+      if (numbers[i] === currentNumber) {
+        currentLength++;
+      } else {
+        currentNumber = numbers[i];
+        currentLength = 1;
       }
-      i++;
+
+      if (currentLength > maxLength) {
+        maxLength = currentLength;
+        maxNumber = currentNumber;
+      }
     }
 
-    let maxOccurrences = countOccurrences.values().next().value;
-    let maxIndex = countOccurrences.keys().next().value;
-    countOccurrences.forEach((value, key) => {
-      if (value > maxOccurrences) {
-        maxIndex = key;
-        maxOccurrences = value;
-      }
-    });
-
-    console.log({ number: maxIndex, length: maxOccurrences });
-    return { number: maxIndex, length: maxOccurrences };
+    return { number: maxNumber, length: maxLength };
   }
 
   @Post('api2')

@@ -6,6 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  console.log(process.env['DATABASE_URL']);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const PgSession = pgSession(session);
   const app = await NestFactory.create(AppModule);
@@ -13,8 +14,9 @@ async function bootstrap() {
     session({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       store: new PgSession({
-        conString: 'postgres://postgres:password@localhost:5432/mydb',
+        conString: process.env['DATABASE_URL'],
         tableName: 'session',
+        createTableIfMissing: true,
       }),
       secret: 'super-secret',
       resave: false,
@@ -27,6 +29,12 @@ async function bootstrap() {
   app.use(passport.initialize());
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   app.use(passport.session());
+
+  app.use((req, res, next) => {
+    console.log('Session:', req.session);
+    console.log('User:', req.user);
+    next();
+  });
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();

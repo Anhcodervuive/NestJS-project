@@ -20,17 +20,25 @@ export class CustomerController {
     const numbers = body.numbers as Array<number>;
     const countOccurrences = new Map<number, number>();
 
-    numbers.forEach((value: number) => {
-      const occurrences = countOccurrences.get(value);
-      if (!occurrences) {
-        countOccurrences.set(value, 1);
-      } else {
+    let i = 0;
+    while (i < numbers.length) {
+      let value = numbers[i];
+      let nextValue = numbers[i + 1];
+      const occurrences = countOccurrences.get(value) ?? 1;
+      countOccurrences.set(value, occurrences);
+
+      while (value === nextValue) {
+        const occurrences = countOccurrences.get(value) ?? 1;
         countOccurrences.set(value, occurrences + 1);
+        i++;
+        value = numbers[i];
+        nextValue = numbers[i + 1];
       }
-    });
+      i++;
+    }
 
     let maxOccurrences = countOccurrences.values().next().value;
-    let maxIndex = countOccurrences.keys()[0];
+    let maxIndex = countOccurrences.keys().next().value;
     countOccurrences.forEach((value, key) => {
       if (value > maxOccurrences) {
         maxIndex = key;
@@ -38,8 +46,8 @@ export class CustomerController {
       }
     });
 
-    console.log({ maxIndex, maxOccurrences });
-    return { maxIndex, maxOccurrences };
+    console.log({ number: maxIndex, length: maxOccurrences });
+    return { number: maxIndex, length: maxOccurrences };
   }
 
   @Post('api2')

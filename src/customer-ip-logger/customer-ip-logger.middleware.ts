@@ -7,7 +7,7 @@ export class CustomerIpLoggerMiddleware implements NestMiddleware {
     const ip = req.ip || req.socket.remoteAddress;
 
     console.log(`[Customer API] IP: ${ip} - ${req.method} ${req.originalUrl}`);
-    console.log('User: ', req.user);
+    // console.log('User: ', req.user);
     next();
   }
 }

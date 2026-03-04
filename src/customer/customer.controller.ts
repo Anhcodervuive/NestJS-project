@@ -4,7 +4,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 export class CustomerController {
   @Get('/')
   findAll() {
-    return '';
+    return 'Customer';
   }
 
   @Get(':id')

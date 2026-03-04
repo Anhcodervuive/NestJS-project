@@ -30,11 +30,11 @@ async function bootstrap() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   app.use(passport.session());
 
-  app.use((req, res, next) => {
-    console.log('Session:', req.session);
-    console.log('User:', req.user);
-    next();
-  });
+  // app.use((req, res, next) => {
+  //   console.log('Session:', req.session);
+  //   console.log('User:', req.user);
+  //   next();
+  // });
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();

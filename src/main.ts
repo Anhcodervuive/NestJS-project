@@ -4,9 +4,9 @@ import pgSession from 'connect-pg-simple';
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  console.log(process.env['DATABASE_URL']);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const PgSession = pgSession(session);
   const app = await NestFactory.create(AppModule);
@@ -29,6 +29,14 @@ async function bootstrap() {
   app.use(passport.initialize());
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   app.use(passport.session());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   // app.use((req, res, next) => {
   //   console.log('Session:', req.session);

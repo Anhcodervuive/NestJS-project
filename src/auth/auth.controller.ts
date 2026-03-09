@@ -3,14 +3,20 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RegisterDto } from './dto/register.dto';
 import type { Request } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
   @Post('register')
   register(@Body() dto: RegisterDto) {
-    return this.authService.register(dto.email, dto.password, dto.fullName);
+    console.log(this.configService.get('DATABASE_URL'));
+    console.log('dto: ', dto);
+    return {};
   }
 
   @UseGuards(AuthGuard('local'))
